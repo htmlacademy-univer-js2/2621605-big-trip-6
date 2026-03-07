@@ -1,14 +1,6 @@
 import {createElement} from '../render.js';
 import {capitalizeFirstLetter} from '../utils.js';
-
-const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
-const OFFER_TYPES = [
-  {type: 'luggage', title: 'Add luggage', price: 30},
-  {type: 'comfort', title: 'Switch to comfort class', price: 100},
-  {type: 'meal', title: 'Add meal', price: 15},
-  {type: 'seats', title: 'Choose seats', price: 5},
-  {type: 'train', title: 'Travel by train', price: 40}
-];
+import { EVENT_TYPES, OFFER_TYPES } from '../data.js';
 
 const createEventTypeItemTemplate = (type) => {
   const capitalizedType = capitalizeFirstLetter(type);
