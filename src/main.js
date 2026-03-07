@@ -1,10 +1,7 @@
-import { HeaderPresenter, MainPresenter } from './presenter/presenter.js';
+import PointsModel from './model/model.js';
+import MainPresenter from './presenter/presenter.js';
 
-const headerContainer = document.querySelector('.trip-controls__filters');
-const eventsContainer = document.querySelector('.trip-events');
+const pointsModel = new PointsModel();
+const mainPresenter = new MainPresenter({pointsModel});
 
-const headerPresenter = new HeaderPresenter({ container: headerContainer });
-const mainPresenter = new MainPresenter({ container: eventsContainer });
-
-headerPresenter.init();
 mainPresenter.init();

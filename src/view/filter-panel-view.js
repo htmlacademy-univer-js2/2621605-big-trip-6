@@ -1,7 +1,6 @@
 import {createElement} from '../render.js';
 import {capitalizeFirstLetter} from '../utils.js';
-
-const FILTER_TYPES = ['everything', 'future', 'present', 'past'];
+import {FILTER_TYPES} from '../data.js';
 
 const createFilterPanelItemTemplate = (type) => {
   const capitalizedType = capitalizeFirstLetter(type);
