@@ -1,6 +1,6 @@
-import {createElement} from '../render.js';
 import {capitalizeFirstLetter} from '../utils.js';
 import {FILTER_TYPES} from '../data.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const createFilterPanelItemTemplate = (type) => {
   const capitalizedType = capitalizeFirstLetter(type);
@@ -20,20 +20,8 @@ const createFilterPanelTemplate = () => `
     </form>
 `;
 
-export default class FilterPanelView {
-  getTemplate() {
+export default class FilterPanelView extends AbstractView {
+  get template() {
     return createFilterPanelTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }
