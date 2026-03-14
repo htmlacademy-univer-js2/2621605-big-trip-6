@@ -1,6 +1,6 @@
-import {createElement} from '../render.js';
 import {capitalizeFirstLetter} from '../utils.js';
 import { EVENT_TYPES, OFFER_TYPES } from '../data.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const createEventTypeItemTemplate = (type) => {
   const capitalizedType = capitalizeFirstLetter(type);
@@ -113,20 +113,8 @@ const createCreationFormTemplate = () => `
 `;
 
 
-export default class CreationFormView {
-  getTemplate() {
+export default class CreationFormView extends AbstractView {
+  get template() {
     return createCreationFormTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

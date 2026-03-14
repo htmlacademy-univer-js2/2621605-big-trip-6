@@ -1,6 +1,5 @@
-import { createElement } from '../render.js';
 import { getFormatedDate, getFormatedTime, calculateTimeDuration, formatDateTime } from '../utils.js';
-
+import AbstractView from '../framework/view/abstract-view.js';
 
 const createRoutePointTemplate = (point, destination, offerTypes) => {
   const {type, dateFrom, dateTo, basePrice, offers: selectedOffers, isFavourite} = point;
@@ -61,28 +60,35 @@ const createRoutePointTemplate = (point, destination, offerTypes) => {
   `;
 };
 
-export default class RoutePointView {
-  constructor({point, destinations, offers}) {
-    this.point = point;
-    this.destinations = destinations;
-    this.offers = offers;
+export default class RoutePointView extends AbstractView{
+  #point = null;
+  #destinations = null;
+  #offers = null;
+  #onOpenEditButtonClick = null;
+
+  constructor({point, destinations, offers, onOpenEditButtonClick}) {
+    super();
+    this.#point = point;
+    this.#destinations = destinations;
+    this.#offers = offers;
+    this.#onOpenEditButtonClick = onOpenEditButtonClick;
+    this.#setEventListeners();
   }
 
-  getTemplate() {
-    const destination = this.destinations.find((dest) => dest.id === this.point.destination);
-    const offerTypes = this.offers[this.point.type] || [];
-    return createRoutePointTemplate(this.point, destination, offerTypes);
+  get template() {
+    const destination = this.#destinations.find((dest) => dest.id === this.#point.destination);
+    const offerTypes = this.#offers[this.#point.type] || [];
+    return createRoutePointTemplate(this.#point, destination, offerTypes);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
+  #setEventListeners() {
+    this.element
+      .querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#openEditButtonClickHandler);
   }
 
-  removeElement() {
-    this.element = null;
-  }
+  #openEditButtonClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#onOpenEditButtonClick();
+  };
 }

@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const createWholeTripTemplate = () => `
   <section class="trip-main__trip-info  trip-info">
@@ -14,20 +14,8 @@ const createWholeTripTemplate = () => `
   </section>
 `;
 
-export default class WholeTripView {
-  getTemplate() {
+export default class WholeTripView extends AbstractView {
+  get template() {
     return createWholeTripTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }
