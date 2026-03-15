@@ -1,6 +1,6 @@
-import {createElement} from '../render.js';
 import {capitalizeFirstLetter} from '../utils.js';
 import {SORTING_TYPES} from '../data.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const createSortPanelItemTemplate = (type) => {
   const capitalizedType = capitalizeFirstLetter(type);
@@ -19,20 +19,8 @@ const createSortPanelTemplate = () => `
     </form>
 `;
 
-export default class SortPanelView {
-  getTemplate() {
+export default class SortPanelView extends AbstractView {
+  get template() {
     return createSortPanelTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }
