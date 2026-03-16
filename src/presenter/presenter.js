@@ -4,7 +4,9 @@ import EditFormView from '../view/edit-form-view.js';
 import PointListView from '../view/point-list-view.js';
 import SortPanelView from '../view/sort-panel-view.js';
 import WholeTripView from '../view/whole-trip-view.js';
+import EmptyPointsListView from '../view/empty-points-list-view.js';
 import { render, RenderPosition, replace } from '../framework/render.js';
+import { generateFilters } from '../mocks/filter-mock.js';
 
 export default class MainPresenter {
   #model = null;
@@ -22,16 +24,21 @@ export default class MainPresenter {
   init() {
     const { points, destinations, offers} = this.#model;
     render(new WholeTripView(), this.#mainContainer, RenderPosition.AFTERBEGIN);
-    render(new FilterPanelView(), this.#filterContainer);
-    render(new SortPanelView(), this.#eventsContainer, RenderPosition.AFTERBEGIN);
+    const filters = generateFilters(points);
+    render(new FilterPanelView({filters}), this.#filterContainer);
+    if (!points || !points.length) {
+      render(new EmptyPointsListView, this.#eventsContainer);
+    } else {
+      render(new SortPanelView(), this.#eventsContainer, RenderPosition.AFTERBEGIN);
 
-    const pointsListView = new PointListView();
-    render(pointsListView, this.#eventsContainer);
-    const pointsListContainer = pointsListView.element;
+      const pointsListView = new PointListView();
+      render(pointsListView, this.#eventsContainer);
+      const pointsListContainer = pointsListView.element;
 
-    points.forEach((point) => {
-      this.#renderPoint(point, destinations, offers, pointsListContainer);
-    });
+      points.forEach((point) => {
+        this.#renderPoint(point, destinations, offers, pointsListContainer);
+      });
+    }
   }
 
   #renderPoint(point, destinations, offers, pointsListContainer) {

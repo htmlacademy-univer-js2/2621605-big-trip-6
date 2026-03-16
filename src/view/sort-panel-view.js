@@ -1,4 +1,4 @@
-import {capitalizeFirstLetter} from '../utils.js';
+import {capitalizeFirstLetter} from '../utils/general-utils.js';
 import {SORTING_TYPES} from '../data.js';
 import AbstractView from '../framework/view/abstract-view.js';
 

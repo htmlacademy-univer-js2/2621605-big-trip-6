@@ -1,5 +1,3 @@
-const FILTER_TYPES = ['everything', 'future', 'present', 'past'];
-
 const SORTING_TYPES = ['day', 'event', 'time', 'price', 'offer'];
 
 const MONTHS = ['JAN', 'FEB', 'MAR', 'APR','MAY', 'JUN', 'JUL', 'AUG','SEP', 'OCT', 'NOV', 'DEC'];
@@ -33,4 +31,4 @@ const OFFER_TYPES = {
   restaurant: ['Choose live music', 'Choose VIP area']
 };
 
-export {FILTER_TYPES, SORTING_TYPES, EVENT_TYPES, CITIES, DESCRIPTIONS, OFFER_TYPES, MONTHS};
+export {SORTING_TYPES, EVENT_TYPES, CITIES, DESCRIPTIONS, OFFER_TYPES, MONTHS};

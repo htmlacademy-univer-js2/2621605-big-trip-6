@@ -1,4 +1,4 @@
-import { getFormatedDate, getFormatedTime, calculateTimeDuration, formatDateTime } from '../utils.js';
+import { getFormatedDate, getFormatedTime, calculateTimeDuration, formatDateTime } from '../utils/date-utils.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
 const createRoutePointTemplate = (point, destination, offerTypes) => {
