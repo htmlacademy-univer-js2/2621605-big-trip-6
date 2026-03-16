@@ -1,5 +1,5 @@
 import { EVENT_TYPES, OFFER_TYPES } from '../data.js';
-import { getRandomInteger } from '../utils';
+import { getRandomInteger } from '../utils/general-utils.js';
 
 const createOffers = () => {
   const offers = {};

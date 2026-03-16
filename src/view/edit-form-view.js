@@ -1,4 +1,5 @@
-import {capitalizeFirstLetter, getFormatedDate, getFormatedTime} from '../utils.js';
+import {capitalizeFirstLetter} from '../utils/general-utils.js';
+import {getFormatedDate, getFormatedTime} from '../utils/date-utils.js';
 import { EVENT_TYPES } from '../data.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
