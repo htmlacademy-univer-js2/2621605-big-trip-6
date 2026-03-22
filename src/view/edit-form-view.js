@@ -171,6 +171,6 @@ export default class EditFormView extends AbstractView {
 
   #onSubmitButtonClickHandler = (evt) => {
     evt.preventDefault();
-    this.#onSubmitButtonClick();
+    this.#onSubmitButtonClick(this.#point);
   };
 }
