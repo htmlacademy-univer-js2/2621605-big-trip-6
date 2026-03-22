@@ -31,4 +31,9 @@ const OFFER_TYPES = {
   restaurant: ['Choose live music', 'Choose VIP area']
 };
 
-export {SORTING_TYPES, EVENT_TYPES, CITIES, DESCRIPTIONS, OFFER_TYPES, MONTHS};
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING'
+};
+
+export {SORTING_TYPES, EVENT_TYPES, CITIES, DESCRIPTIONS, OFFER_TYPES, MONTHS, Mode};
