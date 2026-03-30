@@ -36,5 +36,7 @@ const isExpiredPoint = (point) => dayjs(point.dateTo) && dayjs().isAfter(point.d
 
 const isActualPoint = (point) => point.dateTo && (dayjs().isSame(dayjs(point.dateFrom), 'minute')) || dayjs().isAfter(point.dateTo, 'milliseconds');
 
+const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
+
 export {getRandomCity, getRandomType,getRandomDescription, getRandomPhoto,
-  generatePictures, isFuturePoint, isActualPoint, isExpiredPoint};
+  generatePictures, isFuturePoint, isActualPoint, isExpiredPoint, updateItem};
