@@ -1,4 +1,10 @@
-const SORTING_TYPES = ['day', 'event', 'time', 'price', 'offer'];
+const SORTING_TYPES = {
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFER: 'offer'
+};
 
 const MONTHS = ['JAN', 'FEB', 'MAR', 'APR','MAY', 'JUN', 'JUL', 'AUG','SEP', 'OCT', 'NOV', 'DEC'];
 
