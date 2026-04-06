@@ -44,7 +44,7 @@ export default class PointPresenter {
       onSubmitButtonClick: this.#onSubmitButtonClickHandler
     });
 
-    if (!prevPointComponent || !prevEditPointComponent){
+    if (prevPointComponent === null || prevEditPointComponent === null){
       render(this.#pointComponent, this.#pointsListContainer);
       return;
     }
@@ -76,35 +76,33 @@ export default class PointPresenter {
     if (evt.key === 'Escape') {
       evt.preventDefault();
       this.#replaceToCommonPoint();
-      document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
   };
 
   #onOpenEditButtonClickHandler = () => {
     this.#replaceToEditPoint();
-    document.addEventListener('keydown', this.#escKeyDownHandler);
-    this.#handleModeChange();
-    this.#mode = Mode.EDITING;
   };
 
   #onCloseEditButtonClickHandler = () => {
     this.#replaceToCommonPoint();
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
-    this.#mode = Mode.DEFAULT;
   };
 
   #onSubmitButtonClickHandler = (point) => {
     this.#handleDataChange(point);
     this.#replaceToCommonPoint();
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
 
   #replaceToEditPoint(){
     replace(this.#editPointComponent, this.#pointComponent);
+    document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#handleModeChange();
+    this.#mode = Mode.EDITING;
   }
 
   #replaceToCommonPoint(){
     replace(this.#pointComponent, this.#editPointComponent);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = Mode.DEFAULT;
   }
 
   #onFavoriteClickHandler = () => {

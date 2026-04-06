@@ -7,6 +7,7 @@ import { render, RenderPosition } from '../framework/render.js';
 import { generateFilters } from '../mocks/filter-mock.js';
 import PointPresenter from './point-presenter.js';
 import { updateItem } from '../utils/point-utils.js';
+import { SORTING_TYPES } from '../data.js';
 
 export default class MainPresenter {
   #model = null;
@@ -15,6 +16,7 @@ export default class MainPresenter {
   #mainContainer = null;
   #points = [];
   #pointsPresenter = new Map();
+  #sortType = SORTING_TYPES.DAY;
 
   constructor({ pointsModel }) {
     this.#model = pointsModel;
@@ -25,7 +27,7 @@ export default class MainPresenter {
   }
 
   init() {
-    const { points, destinations, offers } = this.#model;
+    const { points } = this.#model;
     this.#renderWholeTrip();
 
     const filters = generateFilters(points);
@@ -34,22 +36,12 @@ export default class MainPresenter {
     if (!points || !points.length) {
       this.#renderEmptyPointsList();
     } else {
-      this.#renderSortPanel();
       const pointsListView = new PointListView();
       this.#renderPointList(pointsListView);
-      const pointsListContainer = pointsListView.element;
 
-      points.forEach((point) => {
-        const pointPresenter = new PointPresenter({
-          destinations,
-          offers,
-          pointsListContainer,
-          onDataChange: this.#handleDataChange,
-          onModeChange: this.#handleModeChange
-        });
-        pointPresenter.init(point);
-        this.#pointsPresenter.set(point.id, pointPresenter);
-      });
+      this.#renderSortPanel();
+
+      this.#renderPointsList(points);
     }
   }
 
@@ -66,11 +58,30 @@ export default class MainPresenter {
   }
 
   #renderSortPanel() {
-    render(new SortPanelView(), this.#eventsContainer, RenderPosition.AFTERBEGIN);
+    render(new SortPanelView({ onSortChange: this.#handleSortChange }), this.#eventsContainer, RenderPosition.AFTERBEGIN);
   }
 
   #renderPointList(pointsListView) {
     render(pointsListView, this.#eventsContainer);
+  }
+
+  #renderPointsList(points) {
+    this.#pointsPresenter.forEach((presenter) => presenter.destroy());
+    this.#pointsPresenter.clear();
+
+    const pointsListContainer = this.#eventsContainer.querySelector('.trip-events__list');
+
+    points.forEach((point) => {
+      const pointPresenter = new PointPresenter({
+        destinations: this.#model.destinations,
+        offers: this.#model.offers,
+        pointsListContainer,
+        onDataChange: this.#handleDataChange,
+        onModeChange: this.#handleModeChange
+      });
+      pointPresenter.init(point);
+      this.#pointsPresenter.set(point.id, pointPresenter);
+    });
   }
 
   #handleDataChange = (updatedPoint) => {
@@ -80,5 +91,42 @@ export default class MainPresenter {
 
   #handleModeChange = () => {
     this.#pointsPresenter.forEach((presenter) => presenter.resetView());
+  };
+
+  #handleSortChange = (sortingType) => {
+    this.#sortType = sortingType;
+    this.#renderSortedPoints(sortingType);
+  };
+
+  #sortPoints = (points, sortType) => {
+    const sortedPoints = [...points];
+
+    switch (sortType) {
+      case 'day':
+        sortedPoints.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
+        break;
+
+      case 'time':
+        sortedPoints.sort((a, b) => {
+          const durationA = new Date(a.dateTo) - new Date(a.dateFrom);
+          const durationB = new Date(b.dateTo) - new Date(b.dateFrom);
+          return durationB - durationA;
+        });
+        break;
+
+      case 'price':
+        sortedPoints.sort((a, b) => b.basePrice - a.basePrice);
+        break;
+
+      default:
+        sortedPoints.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
+        break;
+    }
+    return sortedPoints;
+  };
+
+  #renderSortedPoints = (sortType) => {
+    const sortedPoints = this.#sortPoints(this.#model.points, sortType);
+    this.#renderPointsList(sortedPoints);
   };
 }
