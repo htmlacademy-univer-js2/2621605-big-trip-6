@@ -102,11 +102,11 @@ export default class MainPresenter {
     const sortedPoints = [...points];
 
     switch (sortType) {
-      case SORTING_TYPES.DAY:
+      case 'day':
         sortedPoints.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
         break;
 
-      case SORTING_TYPES.TIME:
+      case 'time':
         sortedPoints.sort((a, b) => {
           const durationA = new Date(a.dateTo) - new Date(a.dateFrom);
           const durationB = new Date(b.dateTo) - new Date(b.dateFrom);
@@ -114,7 +114,7 @@ export default class MainPresenter {
         });
         break;
 
-      case SORTING_TYPES.PRICE:
+      case 'price':
         sortedPoints.sort((a, b) => b.basePrice - a.basePrice);
         break;
 
