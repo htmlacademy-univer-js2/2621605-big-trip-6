@@ -1,7 +1,7 @@
 import {capitalizeFirstLetter} from '../utils/general-utils.js';
 import {getFormatedDate, getFormatedTime} from '../utils/date-utils.js';
 import { EVENT_TYPES } from '../data.js';
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 const createEditFormTemplate = (point = {}, destinations = [], offers = {}) => {
   const {
@@ -59,10 +59,10 @@ const createEditFormTemplate = (point = {}, destinations = [], offers = {}) => {
   const destinationDescriptionTemplate = destination.description ? `
     <section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">Chamonix-Mont-Blanc (usually shortened to Chamonix) is a resort area near the junction of France, Switzerland and Italy. At the base of Mont Blanc, the highest summit in the Alps, it's renowned for its skiing.</p>
+      <p class="event__destination-description">${destination.description}</p>
       ${destination.pictures.length > 0 ? `
         <div class="event__photos-container">
-          <div class="event__photos-gallery">
+          <div class="event__photos-tape">
             ${destination.pictures.map((picture) => `
               <img class="event__photo" src="${picture.src}" alt="${picture.description}">
             `).join('')}
@@ -74,7 +74,7 @@ const createEditFormTemplate = (point = {}, destinations = [], offers = {}) => {
 
   return `
     <li class="trip-events__item">
-      <form class="event event--edit" action="#" method="post">
+      <form class="event event--edit" action="#" method="post" autocomplete="off">
         <header class="event__header">
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -133,7 +133,7 @@ const createEditFormTemplate = (point = {}, destinations = [], offers = {}) => {
 };
 
 
-export default class EditFormView extends AbstractView {
+export default class EditFormView extends AbstractStatefulView {
   #point = null;
   #destinations = null;
   #offers = null;
@@ -142,27 +142,45 @@ export default class EditFormView extends AbstractView {
 
   constructor({point = null, destinations = [], offers = {}, onCloseEditButtonClick, onSubmitButtonClick}){
     super();
-    this.#point = point;
+    this._setState({...point});
     this.#destinations = destinations;
     this.#offers = offers;
     this.#onCloseEditButtonClick = onCloseEditButtonClick;
     this.#onSubmitButtonClick = onSubmitButtonClick;
-    this.#setEventListeners();
+
+    this._restoreHandlers();
   }
 
   get template() {
-    return createEditFormTemplate(this.#point, this.#destinations, this.#offers);
+    return createEditFormTemplate(this._state, this.#destinations, this.#offers);
   }
 
-  #setEventListeners() {
-    this.element
-      .querySelector('.event__rollup-btn')
-      .addEventListener('click', this.#onCloseEditButtonClickHandler);
+  _restoreHandlers() {
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onCloseEditButtonClickHandler);
 
-    this.element
-      .querySelector('form')
-      .addEventListener('submit', this.#onSubmitButtonClickHandler);
+    this.element.querySelector('form').addEventListener('submit', this.#onSubmitButtonClickHandler);
+
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#eventTypeChangeHandler);
+
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
   }
+
+  #eventTypeChangeHandler = (evt) => {
+    evt.preventDefault();
+    const newEventType = evt.target.value;
+    this.updateElement({
+      type: newEventType,
+      offers: []
+    });
+  };
+
+  #destinationChangeHandler = (evt) => {
+    evt.preventDefault();
+    const selectedDestination = this.#destinations.find((dest) => dest.name === evt.target.value);
+    this.updateElement({
+      destination: selectedDestination ? selectedDestination.id : ''
+    });
+  };
 
   #onCloseEditButtonClickHandler = (evt) => {
     evt.preventDefault();
@@ -171,6 +189,10 @@ export default class EditFormView extends AbstractView {
 
   #onSubmitButtonClickHandler = (evt) => {
     evt.preventDefault();
-    this.#onSubmitButtonClick(this.#point);
+    this.#onSubmitButtonClick(this._state);
   };
+
+  reset(point) {
+    this.updateElement(point);
+  }
 }
