@@ -1,120 +1,175 @@
-import {capitalizeFirstLetter} from '../utils.js';
-import { EVENT_TYPES, OFFER_TYPES } from '../data.js';
-import AbstractView from '../framework/view/abstract-view.js';
+import { capitalizeFirstLetter } from '../utils/general-utils.js';
+import { EVENT_TYPES } from '../data.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
-const createEventTypeItemTemplate = (type) => {
+const createEventTypeItemTemplate = (type, currentType) => {
   const capitalizedType = capitalizeFirstLetter(type);
 
   return `
     <div class="event__type-item">
-      <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${capitalizedType}</label>
+      <input
+        id="event-type-${type}-1"
+        class="event__type-input visually-hidden"
+        type="radio"
+        name="event-type"
+        value="${type}"
+        ${type === currentType ? 'checked' : ''}
+      >
+      <label
+        class="event__type-label event__type-label--${type}"
+        for="event-type-${type}-1"
+      >
+        ${capitalizedType}
+      </label>
     </div>
   `;
 };
 
-const createEventTypeTemplate = () => `
-    <div class="event__type-list">
-      <fieldset class="event__type-group">
-        <legend class="visually-hidden">Event type</legend>
-        ${EVENT_TYPES.map((type) => createEventTypeItemTemplate(type)).join('')}
-      </fieldset>
-    </div>
-`;
-
-const createTimeIntervalTemplate = () => `
-  <div class="event__field-group  event__field-group--time">
-    <label class="visually-hidden" for="event-start-time-1">From</label>
-    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="19/03/19 00:00">
-    &mdash;
-    <label class="visually-hidden" for="event-end-time-1">To</label>
-    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="19/03/19 00:00">
+const createEventTypeTemplate = (currentType) => `
+  <div class="event__type-list">
+    <fieldset class="event__type-group">
+      <legend class="visually-hidden">Event type</legend>
+      ${EVENT_TYPES.map((type) => createEventTypeItemTemplate(type, currentType)).join('')}
+    </fieldset>
   </div>
 `;
 
-const createAvailableOffersItemTemplate = (offer) => `
-  <div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.type}-1" type="checkbox" name="event-offer-${offer.type}" checked>
-    <label class="event__offer-label" for="event-offer-${offer.type}-1">
-      <span class="event__offer-title">${offer.title}</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offer.price}</span>
-    </label>
-  </div>
-`;
+const createCreationFormTemplate = (state, destinations = []) => {
+  const {
+    type,
+    destination,
+    basePrice
+  } = state;
 
-const createAvailableOffersTemplate = () => `
-  <div class="event__available-offers">
-    ${OFFER_TYPES.map((offer) => createAvailableOffersItemTemplate(offer)).join('')}
-  </div>
-`;
+  const destinationsTemplate = destinations.map((place) => `
+    <option value="${place.name}"></option>
+  `).join('');
 
-const createCreationFormTemplate = () => `
-    <form class="event event--edit" action="#" method="post">
-      <header class="event__header">
-        <div class="event__type-wrapper">
-          <label class="event__type  event__type-btn" for="event-type-toggle-1">
-            <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
-          </label>
-          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+  return `
+    <li class="trip-events__item">
+      <form class="event event--edit" action="#" method="post" autocomplete="off">
+        <header class="event__header">
 
-          ${createEventTypeTemplate()}
-        </div>
+          <div class="event__type-wrapper">
+            <label class="event__type event__type-btn" for="event-type-toggle-1">
+              <span class="visually-hidden">Choose event type</span>
+              <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
+            </label>
+            <input class="event__type-toggle visually-hidden" id="event-type-toggle-1" type="checkbox">
 
-        <div class="event__field-group  event__field-group--destination">
-          <label class="event__label  event__type-output" for="event-destination-1">
-            Flight
-          </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Geneva" list="destination-list-1">
-          <datalist id="destination-list-1">
-            <option value="Amsterdam"></option>
-            <option value="Geneva"></option>
-            <option value="Chamonix"></option>
-          </datalist>
-        </div>
-
-        ${createTimeIntervalTemplate()}
-
-        <div class="event__field-group  event__field-group--price">
-          <label class="event__label" for="event-price-1">
-            <span class="visually-hidden">Price</span>
-            &euro;
-          </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
-        </div>
-
-        <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Cancel</button>
-      </header>
-      <section class="event__details">
-        <section class="event__section  event__section--offers">
-          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-          ${createAvailableOffersTemplate()}
-        </section>
-
-        <section class="event__section  event__section--destination">
-          <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
-
-          <div class="event__photos-container">
-            <div class="event__photos-tape">
-              <img class="event__photo" src="img/photos/1.jpg" alt="Event photo">
-              <img class="event__photo" src="img/photos/2.jpg" alt="Event photo">
-              <img class="event__photo" src="img/photos/3.jpg" alt="Event photo">
-              <img class="event__photo" src="img/photos/4.jpg" alt="Event photo">
-              <img class="event__photo" src="img/photos/5.jpg" alt="Event photo">
-            </div>
+            ${createEventTypeTemplate(type)}
           </div>
-        </section>
-      </section>
-    </form>
-`;
 
+          <div class="event__field-group event__field-group--destination">
+            <label class="event__label event__type-output" for="event-destination-1">
+              ${capitalizeFirstLetter(type)}
+            </label>
 
-export default class CreationFormView extends AbstractView {
+            <input
+              class="event__input event__input--destination"
+              id="event-destination-1"
+              type="text"
+              name="event-destination"
+              value="${destination}"
+              list="destination-list-1"
+            >
+
+            <datalist id="destination-list-1">
+              ${destinationsTemplate}
+            </datalist>
+          </div>
+
+          <div class="event__field-group event__field-group--time">
+            <label class="visually-hidden" for="event-start-time-1">From</label>
+            <input class="event__input event__input--time" id="event-start-time-1" type="text" value="">
+            &mdash;
+            <label class="visually-hidden" for="event-end-time-1">To</label>
+            <input class="event__input event__input--time" id="event-end-time-1" type="text" value="">
+          </div>
+
+          <div class="event__field-group event__field-group--price">
+            <label class="event__label" for="event-price-1">
+              <span class="visually-hidden">Price</span>
+              &euro;
+            </label>
+
+            <input
+              class="event__input event__input--price"
+              id="event-price-1"
+              type="text"
+              name="event-price"
+              value="${basePrice}"
+            >
+          </div>
+
+          <button class="event__save-btn btn btn--blue" type="submit">Save</button>
+          <button class="event__reset-btn" type="reset">Cancel</button>
+
+        </header>
+      </form>
+    </li>
+  `;
+};
+
+export default class CreationFormView extends AbstractStatefulView {
+  #destinations = null;
+
+  constructor({ destinations = [] } = {}) {
+    super();
+
+    this.#destinations = destinations;
+
+    this._setState({
+      type: EVENT_TYPES[0],
+      destination: '',
+      basePrice: ''
+    });
+
+    this._restoreHandlers();
+  }
+
   get template() {
-    return createCreationFormTemplate();
+    return createCreationFormTemplate(this._state, this.#destinations);
+  }
+
+  _restoreHandlers() {
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#eventTypeChangeHandler);
+
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
+
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
+  }
+
+  #eventTypeChangeHandler = (evt) => {
+    if (evt.target.name !== 'event-type') {
+      return;
+    }
+
+    this.updateElement({
+      type: evt.target.value
+    });
+  };
+
+  #destinationChangeHandler = (evt) => {
+    const selected = this.#destinations.find((dest) => dest.name === evt.target.value);
+    this.updateElement({
+      destination: selected.name
+    });
+  };
+
+  #priceChangeHandler = (evt) => {
+    this.updateElement({
+      basePrice: evt.target.value
+    });
+  };
+
+  reset() {
+    this._setState({
+      type: EVENT_TYPES[0],
+      destination: '',
+      basePrice: ''
+    });
+
+    this._restoreHandlers();
   }
 }
