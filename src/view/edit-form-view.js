@@ -1,6 +1,6 @@
 import {capitalizeFirstLetter} from '../utils/general-utils.js';
 import {getFormatedDate, getFormatedTime} from '../utils/date-utils.js';
-import { EVENT_TYPES } from '../data.js';
+import { EVENT_TYPES, EVENT_TYPE_ICONS } from '../data.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 const createEditFormTemplate = (point = {}, destinations = [], offers = {}) => {
@@ -79,7 +79,7 @@ const createEditFormTemplate = (point = {}, destinations = [], offers = {}) => {
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-1">
               <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
+              <img class="event__type-icon" width="17" height="17" src="${EVENT_TYPE_ICONS[type]}" alt="Event type icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
