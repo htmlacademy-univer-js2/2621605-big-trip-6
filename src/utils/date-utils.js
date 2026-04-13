@@ -1,18 +1,27 @@
 import { MONTHS } from '../data.js';
-import {getRandomInteger} from '../utils/general-utils.js';
+import { getRandomInteger } from '../utils/general-utils.js';
 
 const getRandomDate = () => {
-  const currentDate = new Date();
-  const finalDate = new Date();
-  finalDate.setDate(currentDate.getDate() + getRandomInteger(1, 31));
-  finalDate.setHours(getRandomInteger(0, 23) + getRandomInteger (0, 59));
-  return finalDate;
+  const date = new Date();
+
+  date.setDate(date.getDate() + getRandomInteger(1, 31));
+  date.setHours(getRandomInteger(0, 23));
+  date.setMinutes(getRandomInteger(0, 59));
+  date.setSeconds(0);
+  date.setMilliseconds(0);
+
+  return date;
 };
 
 const getRandomEndDate = (beginDate) => {
   const endDate = new Date(beginDate);
-  endDate.setHours(endDate.getHours() + getRandomInteger(1, 12));
-  endDate.setMinutes(getRandomInteger (0, 59));
+  const extraHours = getRandomInteger(1, 120);
+
+  endDate.setHours(endDate.getHours() + extraHours);
+  endDate.setMinutes(getRandomInteger(0, 59));
+  endDate.setSeconds(0);
+  endDate.setMilliseconds(0);
+
   return endDate;
 };
 
@@ -29,14 +38,22 @@ const formatDateTime = (date) => date.toISOString().slice(0, 16);
 const calculateTimeDuration = (from, to) => {
   const msDiff = to - from;
 
-  const minutesDiff = Math.floor(msDiff / (1000 * 60));
-  const hours = Math.floor(minutesDiff / 60);
-  const minutes = minutesDiff % 60;
+  const totalMinutes = Math.floor(msDiff / (1000 * 60));
+
+  const days = Math.floor(totalMinutes / (60 * 24));
+  const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+  const minutes = totalMinutes % 60;
+
+  if (days > 0) {
+    return `${days}D ${hours}H ${minutes.toString().padStart(2, '0')}M`;
+  }
 
   if (hours > 0) {
     return `${hours}H ${minutes.toString().padStart(2, '0')}M`;
   }
+
   return `${minutes}M`;
 };
 
-export {getRandomDate, getRandomEndDate, getFormatedDate, getFormatedTime, formatDateTime, calculateTimeDuration};
+export {getRandomDate, getRandomEndDate, getFormatedDate, getFormatedTime, formatDateTime, calculateTimeDuration
+};
