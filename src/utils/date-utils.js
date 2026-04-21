@@ -4,7 +4,7 @@ import { getRandomInteger } from '../utils/general-utils.js';
 const getRandomDate = () => {
   const date = new Date();
 
-  date.setDate(date.getDate() + getRandomInteger(1, 31));
+  date.setDate(date.getDate() + getRandomInteger(-31, 31));
   date.setHours(getRandomInteger(0, 23));
   date.setMinutes(getRandomInteger(0, 59));
   date.setSeconds(0);
@@ -55,5 +55,16 @@ const calculateTimeDuration = (from, to) => {
   return `${minutes}M`;
 };
 
-export {getRandomDate, getRandomEndDate, getFormatedDate, getFormatedTime, formatDateTime, calculateTimeDuration
+const isDatesEqual = (dateA, dateB) => {
+  if (!dateA && !dateB) {
+    return true;
+  }
+
+  if (!dateA || !dateB) {
+    return false;
+  }
+
+  return new Date(dateA).getTime() === new Date(dateB).getTime();
 };
+
+export {getRandomDate, getRandomEndDate, getFormatedDate, getFormatedTime, formatDateTime, calculateTimeDuration, isDatesEqual};

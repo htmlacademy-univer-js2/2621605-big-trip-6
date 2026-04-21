@@ -32,9 +32,9 @@ const generatePictures = () => {
 
 const isFuturePoint = (point) => dayjs().isBefore(point.dateFrom, 'minute');
 
-const isExpiredPoint = (point) => dayjs(point.dateTo) && dayjs().isAfter(point.dateTo, 'milliseconds');
+const isExpiredPoint = (point) => point.dateTo && dayjs().isAfter(point.dateTo, 'millisecond');
 
-const isActualPoint = (point) => point.dateTo && (dayjs().isSame(dayjs(point.dateFrom), 'minute')) || dayjs().isAfter(point.dateTo, 'milliseconds');
+const isActualPoint = (point) => point.dateTo && (dayjs().isAfter(point.dateFrom, 'minute') && dayjs().isBefore(point.dateTo, 'minute'));
 
 const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
 
