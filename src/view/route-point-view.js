@@ -78,7 +78,8 @@ export default class RoutePointView extends AbstractView{
   }
 
   get template() {
-    const destination = this.#destinations.find((dest) => dest.id === this.#point.destination);
+    const destination = this.#destinations.find((dest) => dest.id === this.#point.destination)
+      || {name: ''};
     const offerTypes = this.#offers[this.#point.type] || [];
     return createRoutePointTemplate(this.#point, destination, offerTypes);
   }

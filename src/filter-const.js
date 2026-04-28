@@ -2,9 +2,16 @@ import { isFuturePoint, isActualPoint, isExpiredPoint } from './utils/point-util
 
 const FilterPoint = {
   EVERYTHING: 'everything',
-  FUTURE: 'future',
+  PAST: 'past',
   PRESENT: 'present',
-  PAST: 'past'
+  FUTURE: 'future',
+};
+
+const EMPTY_POINTS_LIST = {
+  EVERYTHING: 'Click New Event to create your first point',
+  PAST: 'There are no past events now',
+  PRESENT: 'There are no present events now',
+  FUTURE: 'There are no future events now',
 };
 
 const filter = {
@@ -14,4 +21,4 @@ const filter = {
   [FilterPoint.PAST]: (points) => points.filter((point) => isExpiredPoint(point))
 };
 
-export { FilterPoint, filter};
+export { FilterPoint, EMPTY_POINTS_LIST, filter};

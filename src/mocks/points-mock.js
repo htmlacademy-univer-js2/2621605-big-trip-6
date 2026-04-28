@@ -1,9 +1,6 @@
 import { EVENT_TYPES } from '../data.js';
 import { getRandomArrayElement, getRandomInteger } from '../utils/general-utils.js';
 import { getRandomDate, getRandomEndDate } from '../utils/date-utils.js';
-import { createDestinations } from './destinations-mock.js';
-import { createOffers } from './offers-mock.js';
-
 
 const createPoint = (destinations, offers) => {
   const type = getRandomArrayElement(EVENT_TYPES);
@@ -35,12 +32,4 @@ const createPoint = (destinations, offers) => {
   };
 };
 
-const generateMockPoint = () => {
-  const destinations = createDestinations();
-  const offers = createOffers();
-  const pointsCount = getRandomInteger(0, 5);
-  const points = Array.from({length: pointsCount}, () => createPoint(destinations, offers));
-  return { destinations, offers, points};
-};
-
-export { generateMockPoint };
+export { createPoint };

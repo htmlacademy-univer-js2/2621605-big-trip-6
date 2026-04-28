@@ -28,7 +28,7 @@ export default class SortPanelView extends AbstractView {
   #handleSortChange = null;
   #activeSortType = null;
 
-  constructor({ onSortChange, activeSortType = SORTING_TYPES.DAY }) {
+  constructor({ onSortChange, activeSortType = SORTING_TYPES.DAY.type }) {
     super();
     this.#handleSortChange = onSortChange;
     this.#activeSortType = activeSortType;
@@ -47,15 +47,6 @@ export default class SortPanelView extends AbstractView {
       return;
     }
     const sortType = input.dataset.sortType;
-
-    document.querySelectorAll('input[name="trip-sort"]').forEach((inputElement) => {
-      inputElement.checked = false;
-      inputElement.removeAttribute('checked');
-    });
-
-    input.checked = true;
-    input.setAttribute('checked', '');
-
     this.#handleSortChange(sortType);
   };
 }

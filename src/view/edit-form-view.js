@@ -4,6 +4,7 @@ import { EVENT_TYPES, EVENT_TYPE_ICONS } from '../data.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import he from 'he';
 
 const createEditFormTemplate = (point = {}, destinations = [], offers = {}) => {
   const {
@@ -96,7 +97,7 @@ const createEditFormTemplate = (point = {}, destinations = [], offers = {}) => {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${capitalizeFirstLetter(type)}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(destination ? `${destination.name}` : '')}" list="destination-list-1" required>
             <datalist id="destination-list-1">
               ${destinationsTemplate}
             </datalist>
@@ -115,7 +116,7 @@ const createEditFormTemplate = (point = {}, destinations = [], offers = {}) => {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+            <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -142,14 +143,16 @@ export default class EditFormView extends AbstractStatefulView {
   #onSubmitButtonClick = null;
   #datepickerStart = null;
   #datepickerEnd = null;
+  #onDeleteButtonClick = null;
 
-  constructor({point = null, destinations = [], offers = {}, onCloseEditButtonClick, onSubmitButtonClick}){
+  constructor({point = null, destinations = [], offers = {}, onCloseEditButtonClick, onSubmitButtonClick, onDeleteButtonClick}) {
     super();
     this._setState({...point});
     this.#destinations = destinations;
     this.#offers = offers;
     this.#onCloseEditButtonClick = onCloseEditButtonClick;
     this.#onSubmitButtonClick = onSubmitButtonClick;
+    this.#onDeleteButtonClick = onDeleteButtonClick;
 
     this._restoreHandlers();
   }
@@ -166,6 +169,12 @@ export default class EditFormView extends AbstractStatefulView {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#eventTypeChangeHandler);
 
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
+
+    this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#offersChangeHandler);
+
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onDeleteClickHandler);
+
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
 
     this.#setDatepickerStart();
     this.#setDatepickerEnd();
@@ -235,5 +244,39 @@ export default class EditFormView extends AbstractStatefulView {
 
   #dateToChangeHandler = ([userDate]) => {
     this._setState({dateTo: userDate,});
+  };
+
+  #offersChangeHandler = (evt) => {
+    if (!evt.target.classList.contains('event__offer-checkbox')) {
+      return;
+    }
+
+    const offerId = evt.target.value;
+    const checked = evt.target.checked;
+
+    const currentOffers = this._state.offers;
+
+    let updatedOffers;
+
+    if (checked) {
+      updatedOffers = [...currentOffers, offerId];
+    } else {
+      updatedOffers = currentOffers.filter((id) => id !== offerId);
+    }
+
+    this._setState({
+      offers: updatedOffers
+    });
+  };
+
+  #priceChangeHandler = (evt) => {
+    this._setState({
+      basePrice: Number(evt.target.value)
+    });
+  };
+
+  #onDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#onDeleteButtonClick(this._state);
   };
 }
