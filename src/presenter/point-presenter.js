@@ -1,4 +1,4 @@
-import { Mode, UpdateType, UserAction } from '../data.js';
+import { Mode, UpdateType, UserAction } from '../consts.js';
 import { render, replace, remove } from '../framework/render.js';
 import EditFormView from '../view/edit-form-view.js';
 import RoutePointView from '../view/route-point-view.js';
@@ -122,7 +122,7 @@ export default class PointPresenter {
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
       UpdateType.PATCH,
-      {...this.#point, isFavourite: !this.#point.isFavourite}
+      {...this.#point, isFavorite: !this.#point.isFavorite}
     );
   };
 

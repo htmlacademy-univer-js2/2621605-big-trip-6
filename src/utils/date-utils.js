@@ -1,4 +1,4 @@
-import { MONTHS } from '../data.js';
+import { MONTHS } from '../consts.js';
 import { getRandomInteger } from '../utils/general-utils.js';
 
 const getRandomDate = () => {

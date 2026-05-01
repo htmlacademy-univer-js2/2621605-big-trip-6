@@ -1,4 +1,4 @@
-import { EVENT_TYPES } from '../data.js';
+import { EVENT_TYPES } from '../consts.js';
 import { getRandomArrayElement, getRandomInteger } from '../utils/general-utils.js';
 import { getRandomDate, getRandomEndDate } from '../utils/date-utils.js';
 
