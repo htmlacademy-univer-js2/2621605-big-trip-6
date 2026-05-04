@@ -1,6 +1,6 @@
 import {capitalizeFirstLetter} from '../utils/general-utils.js';
 import {getFormatedDate, getFormatedTime} from '../utils/date-utils.js';
-import { EVENT_TYPES, EVENT_TYPE_ICONS } from '../data.js';
+import { EVENT_TYPES, EVENT_TYPE_ICONS } from '../consts.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';

@@ -1,4 +1,4 @@
-import { EVENT_TYPES, CITIES, DESCRIPTIONS } from '../data.js';
+import { EVENT_TYPES, CITIES, DESCRIPTIONS } from '../consts.js';
 import {getRandomArrayElement, getRandomInteger} from '../utils/general-utils.js';
 import dayjs from 'dayjs';
 

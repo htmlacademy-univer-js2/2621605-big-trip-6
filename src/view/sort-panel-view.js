@@ -1,5 +1,5 @@
 import { capitalizeFirstLetter } from '../utils/general-utils.js';
-import { SORTING_TYPES } from '../data.js';
+import { SORTING_TYPES } from '../consts.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
 const sortingTypesArray = Object.values(SORTING_TYPES);

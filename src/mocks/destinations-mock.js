@@ -1,4 +1,4 @@
-import { CITIES, DESCRIPTIONS } from '../data.js';
+import { CITIES, DESCRIPTIONS } from '../consts.js';
 import {getRandomDescription, generatePictures } from '../utils/point-utils.js';
 
 const createDestinations = () => CITIES.map((city) => ({

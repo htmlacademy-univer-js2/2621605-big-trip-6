@@ -4,12 +4,14 @@ import WholeTripView from '../view/whole-trip-view.js';
 import EmptyPointsListView from '../view/empty-points-list-view.js';
 import { render, RenderPosition, remove } from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
-import { SORTING_TYPES } from '../data.js';
+import { SORTING_TYPES } from '../consts.js';
 import FilterPresenter from './filter-presenter.js';
 import { FilterPoint, filter } from '../filter-const.js';
-import { UserAction, UpdateType } from '../data.js';
+import { UserAction, UpdateType } from '../consts.js';
 import NewPointButtonView from '../view/new-point-button-view.js';
 import NewPointPresenter from './new-point-presenter.js';
+import LoadingView from '../view/loading-view.js';
+import LoadingErrorView from '../view/loading-error-view.js';
 
 export default class MainPresenter {
   #pointsModel = null;
@@ -24,6 +26,8 @@ export default class MainPresenter {
   #sortComponent = null;
   #newPointPresenter = null;
   #newPointButtonComponent = null;
+  #loadingComponent = null;
+  #loadingErrorComponent = null;
 
   constructor({ pointsModel, filterModel }) {
     this.#pointsModel = pointsModel;
@@ -45,31 +49,10 @@ export default class MainPresenter {
   }
 
   init() {
-    const { points } = this.#pointsModel;
-
     this.#renderWholeTrip();
-
     this.#renderFilterPanel();
-
     this.#renderNewPointButton();
-
-    if (!points.length) {
-      const pointsListView = new PointListView();
-      this.#renderPointList(pointsListView);
-
-      this.#renderEmptyPointsList();
-
-      this.#initNewPointPresenter();
-
-    } else {
-      const pointsListView = new PointListView();
-      this.#renderPointList(pointsListView);
-
-      this.#renderSortPanel();
-      this.#renderSortedPoints(this.#sortType);
-
-      this.#initNewPointPresenter();
-    }
+    this.#renderLoading();
   }
 
   #renderWholeTrip() {
@@ -89,6 +72,16 @@ export default class MainPresenter {
     }
     this.#newPointButtonComponent = new NewPointButtonView({onClick: this.#handleNewPointButtonClick});
     render(this.#newPointButtonComponent, this.#mainContainer);
+  }
+
+  #renderLoading() {
+    this.#loadingComponent = new LoadingView();
+    render(this.#loadingComponent, this.#eventsContainer);
+  }
+
+  #renderLoadingError() {
+    this.#loadingErrorComponent = new LoadingErrorView();
+    render(this.#loadingErrorComponent, this.#eventsContainer);
   }
 
   #handleNewPointButtonClick = () => {
@@ -243,7 +236,7 @@ export default class MainPresenter {
     }
   }
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this.#pointsModel.updatePoint(updateType, update);
@@ -260,7 +253,6 @@ export default class MainPresenter {
   #handleModelEvent = (updateType, update) => {
     remove(this.#wholeTripComponent);
     this.#renderWholeTrip();
-
     switch (updateType) {
       case UpdateType.PATCH:
         this.#pointsPresenter.get(update.id).init(update);
@@ -277,6 +269,35 @@ export default class MainPresenter {
         this.#clearBoard({ resetSortType: true });
         this.#renderSortedPoints(this.#sortType);
         break;
+
+      case UpdateType.INIT: {
+        if (this.#loadingComponent) {
+          remove(this.#loadingComponent);
+        }
+
+        if (this.#loadingErrorComponent) {
+          remove(this.#loadingErrorComponent);
+        }
+
+        this.#clearBoard();
+
+        if (this.#pointsModel.isLoadingError) {
+          this.#renderLoadingError();
+          return;
+        }
+
+        const pointsListView = new PointListView();
+        this.#renderPointList(pointsListView);
+
+        if (!this.points.length) {
+          this.#renderEmptyPointsList();
+        } else {
+          this.#renderSortPanel();
+          this.#renderSortedPoints(this.#sortType);
+        }
+
+        break;
+      }
     }
   };
 }

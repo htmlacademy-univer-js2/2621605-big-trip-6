@@ -65,6 +65,18 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
 };
 
-export {SORTING_TYPES, EVENT_TYPE_ICONS, EVENT_TYPES, CITIES, DESCRIPTIONS, OFFER_TYPES, MONTHS, Mode, UserAction, UpdateType};
+const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
+};
+
+const END_POINT = 'https://24.objects.htmlacademy.pro/big-trip';
+
+const AUTHORIZATION = 'Basic 7gewd87twas1';
+
+export {SORTING_TYPES, EVENT_TYPE_ICONS, EVENT_TYPES, CITIES, DESCRIPTIONS, OFFER_TYPES, MONTHS, Mode, UserAction, UpdateType, Method, END_POINT, AUTHORIZATION};

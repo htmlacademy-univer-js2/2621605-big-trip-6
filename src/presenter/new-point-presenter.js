@@ -1,7 +1,7 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
 import CreationFormView from '../view/creation-form-view.js';
 import {nanoid} from 'nanoid';
-import {UserAction, UpdateType} from '../data.js';
+import {UserAction, UpdateType} from '../consts.js';
 
 export default class NewPointPresenter {
   #pointListContainer = null;
