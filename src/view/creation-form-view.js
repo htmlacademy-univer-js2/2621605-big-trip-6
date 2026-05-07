@@ -44,6 +44,9 @@ const createCreationFormTemplate = (state, destinations = [], offers = {}) => {
     basePrice,
     offers: selectedOffers
   } = state;
+
+  const {isDeleting, isDisabled, isSaving} = state;
+
   const destination = destinations.find((place) => place.id === destinationId)
     || {name: '', description: '', pictures: []};
   const offerTypes = offers[type] || [];
@@ -100,7 +103,7 @@ const createCreationFormTemplate = (state, destinations = [], offers = {}) => {
               <span class="visually-hidden">Choose event type</span>
               <img class="event__type-icon" width="17" height="17" src="${EVENT_TYPE_ICONS[type]}" alt="Event type icon">
             </label>
-            <input class="event__type-toggle visually-hidden" id="event-type-toggle-1" type="checkbox">
+            <input class="event__type-toggle visually-hidden" id="event-type-toggle-1" type="checkbox" ${isDisabled ? 'disabled' : ''}>
 
             ${createEventTypeTemplate(type)}
           </div>
@@ -148,8 +151,8 @@ const createCreationFormTemplate = (state, destinations = [], offers = {}) => {
             >
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Cancel</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isSaving ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+          <button class="event__reset-btn" type="reset" ${isDeleting ? 'disabled' : ''}>Cancel</button>
         </header>
         <section class="event__details">
           ${offersTemplate}
@@ -180,8 +183,6 @@ export default class CreationFormView extends AbstractStatefulView {
       type: 'flight',
       destination: '',
       basePrice: 0,
-      dateFrom: new Date(),
-      dateTo: new Date(),
       offers: []
     });
 
@@ -266,11 +267,12 @@ export default class CreationFormView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    const normalizedPrice = Number(this._state.basePrice);
-    this.#onFormSubmit({
-      ...this._state,
-      basePrice: Number.isFinite(normalizedPrice) && normalizedPrice > 0 ? Math.trunc(normalizedPrice) : 0
-    });
+
+    if (!this._state.basePrice || this._state.basePrice < 1 || !this._state.dateFrom || !this._state.dateTo) {
+      return;
+    }
+
+    this.#onFormSubmit(this._state);
   };
 
   #deleteClickHandler = (evt) => {

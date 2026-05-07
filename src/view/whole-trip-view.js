@@ -93,3 +93,6 @@ export default class WholeTripView extends AbstractView {
     return createWholeTripTemplate(this.#points, this.#offers, this.#destinations);
   }
 }
+
+
+// сделать так чтобы цена и даты не менялись при выборе фильтров past, present... А чтобы на всю поездку отображались все (Для задания 8.10)

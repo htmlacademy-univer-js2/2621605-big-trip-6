@@ -1,29 +1,4 @@
 import { MONTHS } from '../consts.js';
-import { getRandomInteger } from '../utils/general-utils.js';
-
-const getRandomDate = () => {
-  const date = new Date();
-
-  date.setDate(date.getDate() + getRandomInteger(-31, 31));
-  date.setHours(getRandomInteger(0, 23));
-  date.setMinutes(getRandomInteger(0, 59));
-  date.setSeconds(0);
-  date.setMilliseconds(0);
-
-  return date;
-};
-
-const getRandomEndDate = (beginDate) => {
-  const endDate = new Date(beginDate);
-  const extraHours = getRandomInteger(1, 120);
-
-  endDate.setHours(endDate.getHours() + extraHours);
-  endDate.setMinutes(getRandomInteger(0, 59));
-  endDate.setSeconds(0);
-  endDate.setMilliseconds(0);
-
-  return endDate;
-};
 
 const getFormatedDate = (date) => {
   const day = date.getDate();
@@ -67,4 +42,4 @@ const isDatesEqual = (dateA, dateB) => {
   return new Date(dateA).getTime() === new Date(dateB).getTime();
 };
 
-export {getRandomDate, getRandomEndDate, getFormatedDate, getFormatedTime, formatDateTime, calculateTimeDuration, isDatesEqual};
+export {getFormatedDate, getFormatedTime, formatDateTime, calculateTimeDuration, isDatesEqual};

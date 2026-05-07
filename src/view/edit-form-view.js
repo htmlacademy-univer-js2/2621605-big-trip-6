@@ -6,15 +6,17 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import he from 'he';
 
-const createEditFormTemplate = (point = {}, destinations = [], offers = {}) => {
+const createEditFormTemplate = (state, destinations = [], offers = {}) => {
   const {
-    type = EVENT_TYPES[0],
-    destination: destinationId = '',
-    dateFrom = new Date(),
-    dateTo = new Date(),
-    basePrice = 0,
-    offers: selectedOffers = []
-  } = point;
+    type,
+    destination: destinationId,
+    dateFrom,
+    dateTo,
+    basePrice,
+    offers: selectedOffers
+  } = state;
+
+  const {isDisabled, isSaving, isDeleting} = state;
 
   const destination = destinations.find((place) => place.id === destinationId) || destinations[0]
   || {name: '', description: '', pictures: []};
@@ -83,7 +85,7 @@ const createEditFormTemplate = (point = {}, destinations = [], offers = {}) => {
               <span class="visually-hidden">Choose event type</span>
               <img class="event__type-icon" width="17" height="17" src="${EVENT_TYPE_ICONS[type]}" alt="Event type icon">
             </label>
-            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox" ${isDisabled ? 'disabled' : ''}>
 
             <div class="event__type-list">
               <fieldset class="event__type-group">
@@ -116,11 +118,11 @@ const createEditFormTemplate = (point = {}, destinations = [], offers = {}) => {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}">
+            <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" min="1" max="100000" value="${basePrice}" required>
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isSaving ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+          <button class="event__reset-btn" type="reset" ${isDeleting ? 'disabled' : ''}>${isDeleting ? 'Deleting...' : 'Delete'}</button>
           <button class="event__rollup-btn" type="button">
             <span class="visually-hidden">Open event</span>
           </button>
@@ -240,6 +242,7 @@ export default class EditFormView extends AbstractStatefulView {
 
   #dateFromChangeHandler = ([userDate]) => {
     this._setState({dateFrom: userDate,});
+    this.#datepickerEnd.set('minDate', userDate);
   };
 
   #dateToChangeHandler = ([userDate]) => {
