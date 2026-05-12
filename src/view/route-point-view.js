@@ -2,7 +2,7 @@ import { getFormatedDate, getFormatedTime, calculateTimeDuration, formatDateTime
 import AbstractView from '../framework/view/abstract-view.js';
 
 const createRoutePointTemplate = (point, destination, offerTypes) => {
-  const {type, dateFrom, dateTo, basePrice, offers: selectedOffers, isFavourite} = point;
+  const {type, dateFrom, dateTo, basePrice, offers: selectedOffers, isFavorite} = point;
 
   const formatedDate = getFormatedDate(dateFrom);
   const dateTimeFrom = formatDateTime(dateFrom);
@@ -10,7 +10,7 @@ const createRoutePointTemplate = (point, destination, offerTypes) => {
   const timeFrom = getFormatedTime(dateFrom);
   const timeTo = getFormatedTime(dateTo);
   const duration = calculateTimeDuration(dateFrom, dateTo);
-  const classFavorite = isFavourite ? 'event__favorite-btn--active' : '';
+  const classFavorite = isFavorite ? 'event__favorite-btn--active' : '';
 
   const listSelectedOffers = offerTypes.filter((offer) => selectedOffers.includes(offer.id));
   const listOffersTemplate = listSelectedOffers.length > 0 ? `

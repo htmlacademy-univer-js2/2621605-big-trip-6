@@ -32,7 +32,12 @@ export default class SortPanelView extends AbstractView {
     super();
     this.#handleSortChange = onSortChange;
     this.#activeSortType = activeSortType;
-    this.element.addEventListener('click', this.#sortChangeHandler);
+
+    this.element
+      .querySelectorAll('.trip-sort__btn')
+      .forEach((button) =>
+        button.addEventListener('click', this.#sortChangeHandler)
+      );
   }
 
   get template() {
@@ -40,13 +45,13 @@ export default class SortPanelView extends AbstractView {
   }
 
   #sortChangeHandler = (evt) => {
-    const sortItem = evt.target.closest('.trip-sort__item');
-    const input = sortItem.querySelector('input[name="trip-sort"]');
+    const sortType = evt.currentTarget.dataset.sortType;
 
+    const input = this.element.querySelector(`#sort-${sortType}`);
     if (input.disabled) {
       return;
     }
-    const sortType = input.dataset.sortType;
+
     this.#handleSortChange(sortType);
   };
 }
