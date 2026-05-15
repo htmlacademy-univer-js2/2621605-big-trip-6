@@ -1,4 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
+import { MAX_VISIBLE_POINTS } from '../consts/consts.js';
 
 const sortPointsByDate = (points) => [...points].sort((a, b) =>
   new Date(a.dateFrom) - new Date(b.dateFrom)
@@ -17,7 +18,7 @@ const getRouteTitle = (routePoints) => {
     return 'Trip route';
   }
 
-  if (routePoints.length <= 3) {
+  if (routePoints.length <= MAX_VISIBLE_POINTS) {
     return routePoints.join(' — ');
   }
 
@@ -51,7 +52,7 @@ const calculateTotalPrice = (points, offersByType) =>
 
     const offersPrice = selectedOffers.reduce((s, offer) => s + offer.price, 0);
 
-    const pointPrice = Number(point.basePrice) || 0;
+    const pointPrice = point.basePrice;
     return sum + pointPrice + offersPrice;
   }, 0);
 
@@ -93,6 +94,3 @@ export default class WholeTripView extends AbstractView {
     return createWholeTripTemplate(this.#points, this.#offers, this.#destinations);
   }
 }
-
-
-// сделать так чтобы цена и даты не менялись при выборе фильтров past, present... А чтобы на всю поездку отображались все (Для задания 8.10)

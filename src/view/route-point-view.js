@@ -87,19 +87,19 @@ export default class RoutePointView extends AbstractView{
   #setEventListeners() {
     this.element
       .querySelector('.event__rollup-btn')
-      .addEventListener('click', this.#openEditButtonClickHandler);
+      .addEventListener('click', this.#editButtonOpenHandler);
 
     this.element
       .querySelector('.event__favorite-btn')
-      .addEventListener('click', this.#onFavoriteClickHandler);
+      .addEventListener('click', this.#favoriteClickHandler);
   }
 
-  #openEditButtonClickHandler = (evt) => {
+  #editButtonOpenHandler = (evt) => {
     evt.preventDefault();
     this.#onOpenEditButtonClick();
   };
 
-  #onFavoriteClickHandler = (evt) => {
+  #favoriteClickHandler = (evt) => {
     evt.preventDefault();
     this.#onFavoriteClick();
   };

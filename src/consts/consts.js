@@ -53,8 +53,12 @@ const END_POINT = 'https://24.objects.htmlacademy.pro/big-trip';
 const AUTHORIZATION = 'Basic 7gewd87twas1';
 
 const TimeLimit = {
-  LOWER_LIMIT: 350,
-  UPPER_LIMIT: 1000
+  MIN_TIMEOUT: 350,
+  MAX_TIMEOUT: 1000
 };
 
-export {SORTING_TYPES, EVENT_TYPE_ICONS, EVENT_TYPES, MONTHS, Mode, UserAction, UpdateType, Method, END_POINT, AUTHORIZATION, TimeLimit};
+const MAX_VISIBLE_POINTS = 3;
+
+const MIN_PRICE = 1;
+
+export {SORTING_TYPES, EVENT_TYPE_ICONS, EVENT_TYPES, MONTHS, Mode, UserAction, UpdateType, Method, END_POINT, AUTHORIZATION, TimeLimit, MAX_VISIBLE_POINTS, MIN_PRICE};

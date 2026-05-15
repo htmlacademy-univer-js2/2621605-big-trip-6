@@ -1,20 +1,21 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
 import CreationFormView from '../view/creation-form-view.js';
-import {UserAction, UpdateType} from '../consts.js';
+import {UserAction, UpdateType} from '../consts/consts.js';
 
 export default class NewPointPresenter {
   #pointListContainer = null;
   #handleDataChange = null;
   #handleDestroy = null;
-
+  #allOffers = null;
+  #allDestinations = null;
   #pointEditComponent = null;
 
   constructor({allOffers, allDestinations, pointListContainer, onDataChange, onDestroy}) {
     this.#pointListContainer = pointListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
-    this.allOffers = allOffers;
-    this.allDestinations = allDestinations;
+    this.#allOffers = allOffers;
+    this.#allDestinations = allDestinations;
   }
 
   init() {
@@ -23,8 +24,8 @@ export default class NewPointPresenter {
     }
 
     this.#pointEditComponent = new CreationFormView({
-      destinations: this.allDestinations,
-      offers: this.allOffers,
+      destinations: this.#allDestinations,
+      offers: this.#allOffers,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick
     });
@@ -47,26 +48,6 @@ export default class NewPointPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
-  #handleFormSubmit = (point) => {
-    this.#handleDataChange(
-      UserAction.ADD_POINT,
-      UpdateType.MINOR,
-      point,
-    );
-    this.destroy();
-  };
-
-  #handleDeleteClick = () => {
-    this.destroy();
-  };
-
-  #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
-      this.destroy();
-    }
-  };
-
   setSaving() {
     this.#pointEditComponent.updateElement({
       isDisabled: true,
@@ -85,4 +66,23 @@ export default class NewPointPresenter {
 
     this.#pointEditComponent.shake(resetFormState);
   }
+
+  #handleFormSubmit = (point) => {
+    this.#handleDataChange(
+      UserAction.ADD_POINT,
+      UpdateType.MINOR,
+      point,
+    );
+  };
+
+  #handleDeleteClick = () => {
+    this.destroy();
+  };
+
+  #escKeyDownHandler = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      this.destroy();
+    }
+  };
 }
