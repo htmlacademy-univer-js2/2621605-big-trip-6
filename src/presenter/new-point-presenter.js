@@ -1,6 +1,7 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
 import CreationFormView from '../view/creation-form-view.js';
 import {UserAction, UpdateType} from '../consts/consts.js';
+import { handleEscapeKey } from '../utils/general-utils.js';
 
 export default class NewPointPresenter {
   #pointListContainer = null;
@@ -80,9 +81,6 @@ export default class NewPointPresenter {
   };
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
-      this.destroy();
-    }
+    handleEscapeKey(evt, () => this.destroy());
   };
 }

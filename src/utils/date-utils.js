@@ -4,7 +4,7 @@ import { TIME_STRING_LENGTH, DATE_TIME_LENGTH, MILLISECONDS_IN_MINUTE, MINUTES_I
 const getFormatedDate = (date) => {
   const day = date.getDate();
   const month = MONTHS[date.getMonth()];
-  return `${day} ${month}`;
+  return `${month} ${day}`;
 };
 
 const getFormatedTime = (time) =>
@@ -26,12 +26,16 @@ const calculateTimeDuration = (from, to) => {
 
   const minutes = totalMinutes % MINUTES_IN_HOUR;
 
+  const formattedDays = days.toString().padStart(2, '0');
+  const formattedHours = hours.toString().padStart(2, '0');
+  const formattedMinutes = minutes.toString().padStart(2, '0');
+
   if (days > 0) {
-    return `${days}D ${hours}H ${minutes.toString().padStart(2, '0')}M`;
+    return `${formattedDays}D ${formattedHours}H ${formattedMinutes}M`;
   }
 
   if (hours > 0) {
-    return `${hours}H ${minutes.toString().padStart(2, '0')}M`;
+    return `${formattedHours}H ${formattedMinutes}M`;
   }
 
   return `${minutes}M`;
