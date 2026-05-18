@@ -3,6 +3,7 @@ import { render, replace, remove } from '../framework/render.js';
 import EditFormView from '../view/edit-form-view.js';
 import RoutePointView from '../view/route-point-view.js';
 import { isDatesEqual } from '../utils/date-utils.js';
+import { handleEscapeKey } from '../utils/general-utils.js';
 
 export default class PointPresenter {
   #pointsListContainer = null;
@@ -125,10 +126,7 @@ export default class PointPresenter {
   }
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape') {
-      evt.preventDefault();
-      this.#replaceToCommonPoint();
-    }
+    handleEscapeKey(evt, () => this.#replaceToCommonPoint());
   };
 
   #editButtonOpenHandler = () => {
