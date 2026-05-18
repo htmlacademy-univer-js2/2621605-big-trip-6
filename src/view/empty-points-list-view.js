@@ -1,4 +1,4 @@
-import { EMPTY_POINTS_LIST } from '../filter-const.js';
+import { EMPTY_POINTS_LIST } from '../consts/filter-consts.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
 const createEmptyPointsListTemplate = (filterType) => `

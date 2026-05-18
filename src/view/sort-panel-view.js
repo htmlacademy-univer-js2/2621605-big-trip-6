@@ -1,8 +1,8 @@
 import { capitalizeFirstLetter } from '../utils/general-utils.js';
-import { SORTING_TYPES } from '../consts.js';
+import { SORTING_TYPES } from '../consts/consts.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
-const sortingTypesArray = Object.values(SORTING_TYPES);
+const sortingTypes = Object.values(SORTING_TYPES);
 
 const createSortPanelItemTemplate = ({type, enabled}, isActive = false) => {
   const capitalizedType = capitalizeFirstLetter(type);
@@ -20,7 +20,7 @@ const createSortPanelItemTemplate = ({type, enabled}, isActive = false) => {
 
 const createSortPanelTemplate = (activeSortType) => `
   <form class="trip-events__trip-sort trip-sort" action="#" method="get">
-    ${sortingTypesArray.map((item) => createSortPanelItemTemplate(item, item.type === activeSortType)).join('')}
+    ${sortingTypes.map((item) => createSortPanelItemTemplate(item, item.type === activeSortType)).join('')}
   </form>
 `;
 
@@ -45,13 +45,6 @@ export default class SortPanelView extends AbstractView {
   }
 
   #sortChangeHandler = (evt) => {
-    const sortType = evt.currentTarget.dataset.sortType;
-
-    const input = this.element.querySelector(`#sort-${sortType}`);
-    if (input.disabled) {
-      return;
-    }
-
-    this.#handleSortChange(sortType);
+    this.#handleSortChange(evt.currentTarget.dataset.sortType);
   };
 }

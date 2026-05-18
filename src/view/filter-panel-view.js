@@ -47,10 +47,6 @@ export default class FilterPanelView extends AbstractView {
   }
 
   #filterChangeHandler = (evt) => {
-    if (evt.target.name !== 'trip-filter') {
-      return;
-    }
-
     this.#handleFilterChange(evt.target.value);
   };
 }

@@ -1,7 +1,7 @@
 import {render, replace, remove} from '../framework/render.js';
 import FilterPanelView from '../view/filter-panel-view';
-import { FilterPoint, filter } from '../filter-const';
-import { UpdateType } from '../consts.js';
+import { FilterType, filter } from '../consts/filter-consts.js';
+import { UpdateType } from '../consts/consts.js';
 
 export default class FilterPresenter {
   #filterContainer = null;
@@ -19,7 +19,7 @@ export default class FilterPresenter {
 
   get filters() {
     const points = this.#pointsModel.points;
-    return Object.values(FilterPoint).map((type) => ({
+    return Object.values(FilterType).map((type) => ({
       type,
       points: filter[type](points)
     }));
